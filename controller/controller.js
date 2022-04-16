@@ -2,14 +2,9 @@ const fs = require("fs");
 var http = require("http");
 const path = require("path");
 const axios = require("axios");
-// const excel = require("excel4node");
 const excel = require("exceljs");
-const { v4: uuidv4 } = require("uuid");
 
 const Favorite = require("../model/favoritesModal");
-
-// Pagination
-const ITEMS_PER_PAGE = 2;
 
 exports.getFilms = async (req, res, next) => {
   try {
