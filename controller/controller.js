@@ -1,6 +1,3 @@
-const fs = require("fs");
-var http = require("http");
-const path = require("path");
 const axios = require("axios");
 const excel = require("exceljs");
 
@@ -77,7 +74,7 @@ exports.getFavorites = async (req, res, next) => {
 
   try {
     const results = await Favorite.find()
-      .skip((page - 1) * ITEMS_PER_PAGE)
+      .skip((page - 1) * limit)
       .limit(limit);
     res.status(200).json({ results });
   } catch (err) {
