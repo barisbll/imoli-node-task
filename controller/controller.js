@@ -1,4 +1,10 @@
+const fs = require("fs");
+var http = require("http");
+const path = require("path");
 const axios = require("axios");
+// const excel = require("excel4node");
+const excel = require("exceljs");
+const { v4: uuidv4 } = require("uuid");
 
 const Favorite = require("../model/favoritesModal");
 
@@ -91,6 +97,42 @@ exports.getFavorite = async (req, res, next) => {
     const result = await Favorite.findById(id);
 
     res.status(200).json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getFile = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const result = await Favorite.findById(id);
+
+    let workbook = new excel.Workbook();
+    let worksheet = workbook.addWorksheet("Films");
+
+    worksheet.columns = [
+      { header: "Characters", key: "characters", width: 40 },
+      { header: "Titles", key: "titles", width: 40 },
+    ];
+
+    const stringTitles = result.titles.join(",");
+
+    result.characters.forEach((character, idx) => {
+      worksheet.addRow([character, stringTitles]);
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=" + "films.xlsx"
+    );
+    return workbook.xlsx.write(res).then(function () {
+      res.status(200).end();
+    });
   } catch (err) {
     next(err);
   }

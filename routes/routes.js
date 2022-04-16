@@ -12,4 +12,6 @@ router.get("/favorites", controller.getFavorites);
 
 router.get("/favorites/:id", controller.getFavorite);
 
+router.get("/favorites/:id/file", controller.getFile);
+
 module.exports = router;
